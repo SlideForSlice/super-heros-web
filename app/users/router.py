@@ -7,7 +7,7 @@ from app.users.auth import get_password_hash, authenticate_user, create_access_t
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.model import User
-from app.users.schema import SUser
+from app.users.schemas import SUser
 
 logger = logging.getLogger(__name__)
 router = APIRouter(

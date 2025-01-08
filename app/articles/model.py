@@ -1,11 +1,9 @@
-from datetime import datetime
+from datetime import datetime, date
 
-from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-
-
 
 class Article(Base):
     __tablename__ = 'articles'
@@ -16,8 +14,8 @@ class Article(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
     powers: Mapped[str] = mapped_column(String, nullable=False)
     solo: Mapped[bool] = mapped_column(Boolean, default=False)
-    image: Mapped[str] = mapped_column(String)
+    image: Mapped[str] = mapped_column(String, nullable=True)
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
-    created_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[date] = mapped_column(Date, nullable=False)
 
     author: Mapped['User'] = relationship('User', back_populates='articles')

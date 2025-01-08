@@ -24,11 +24,19 @@ class BaseDAO:
             return result.scalar_one_or_none()
 
     @classmethod
-    async def find_all(cls, **filter_by):
+    async def find_all_with_filter(cls, **filter_by):
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
             return result.scalars().all()
+
+    @classmethod
+    async def find_all_without_filter(cls):
+        async with async_session_maker() as session:
+            query = select(cls.model)
+            result = await session.execute(query)
+            for now in result.scalars():
+                yield now
 
     @classmethod
     async def add(cls, **data):

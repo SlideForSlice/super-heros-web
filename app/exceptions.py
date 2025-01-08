@@ -36,5 +36,20 @@ class UserIsNotPresentException(Exceptions):
     status_code=status.HTTP_401_UNAUTHORIZED
     detail = "User is unauthorized"
 
+class ArticleIsAlreadyExistsException(Exceptions):
+    status_code=status.HTTP_409_CONFLICT
+    detail="Article already exists"
+
+class UploadFileError(Exceptions):
+    status_code=status.HTTP_409_CONFLICT
+    detail = "Invalid file format. Only JPEG or PNG allowed."
+
+class UserDontFound(Exceptions):
+    status_code=status.HTTP_404_NOT_FOUND
+    detail="User not found"
+
+class ArticleIsNotFound(Exceptions):
+    status_code=status.HTTP_404_NOT_FOUND
+    detail="Article not found"
 
 
