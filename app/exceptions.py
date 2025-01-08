@@ -52,4 +52,8 @@ class ArticleIsNotFound(Exceptions):
     status_code=status.HTTP_404_NOT_FOUND
     detail="Article not found"
 
+class ChatNotFound(Exceptions):
+    status_code=status.HTTP_404_NOT_FOUND
+    detail="Chat not found"
+
 

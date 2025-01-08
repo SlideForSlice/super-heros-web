@@ -1,5 +1,5 @@
-from datetime import datetime
-from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime
+from datetime import datetime, date
+from sqlalchemy import Integer, String, Boolean, ForeignKey, DateTime, Date, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -14,7 +14,7 @@ class Support(Base):
     chat_name: Mapped[str] = mapped_column(String, nullable=False)
     is_solved: Mapped[bool] = mapped_column(Boolean, default=False)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
-    created_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
 
     user: Mapped['User'] = relationship('User', back_populates='support')
     messages: Mapped[list['ChatMessage']] = relationship('ChatMessage', back_populates='chat')

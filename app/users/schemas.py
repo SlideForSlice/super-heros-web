@@ -6,11 +6,11 @@ class SUser(BaseModel):
     password: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class SAuthor(BaseModel):
     id: int
     email: EmailStr
 
     class Config:
-        orm_mode = True
+        from_attributes = True
