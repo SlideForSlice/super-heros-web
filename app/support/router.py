@@ -1,8 +1,8 @@
-from typing import List, Dict
+from typing import Dict, List
 
 from fastapi import APIRouter
 from fastapi.params import Depends
-
+from fastapi_versioning import version
 from app.exceptions import *
 from app.support.dao import SupportDAO
 from app.support.schemas import SSupport
@@ -15,10 +15,12 @@ router = APIRouter(
 )
 
 @router.get("/all_chats")
+@version(1)
 async def get_all_chats(current_user: User = Depends(get_current_user)) -> List[SSupport]:
     return await SupportDAO.find_all_with_filter(user_id=current_user.id)
 
 @router.get("/{chat_id}")
+@version(1)
 async def get_chat_by_id(chat_id: int) -> SSupport:
     result = await SupportDAO.find_one_or_none(chat_id=chat_id)
 
@@ -28,6 +30,7 @@ async def get_chat_by_id(chat_id: int) -> SSupport:
         return result
 
 @router.post("/")
+@version(1)
 async def create_chat(
         chat_name: str,
         user: User = Depends(get_current_user)
@@ -35,6 +38,7 @@ async def create_chat(
     return await SupportDAO.add(user_id=user.id, name=chat_name)
 
 @router.patch("/{chat_id}")
+@version(1)
 async def update_status_chat(chat_id: int, is_solved: bool) -> SSupport:
     result = await SupportDAO.update_status(chat_id=chat_id, is_solved=is_solved)
 
@@ -44,6 +48,7 @@ async def update_status_chat(chat_id: int, is_solved: bool) -> SSupport:
         return result
 
 @router.delete("/{chat_id}")
+@version(1)
 async def delete_chat_by_id(chat_id: int) -> Dict[str, str]:
     result = await SupportDAO.delete_chat(chat_id=chat_id)
 

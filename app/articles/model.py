@@ -1,9 +1,10 @@
-from datetime import datetime, date
+from datetime import date
 
-from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Date
+from sqlalchemy import Boolean, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
 
 class Article(Base):
     __tablename__ = 'articles'

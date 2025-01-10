@@ -1,18 +1,16 @@
 import shutil
 from datetime import datetime, timezone
-from typing import Optional
+from pathlib import Path
 
 from fastapi import UploadFile
-from fastapi.params import Depends
-from sqlalchemy.exc import IntegrityError, DatabaseError
-from pathlib import Path
+
+from sqlalchemy import select
+from sqlalchemy.exc import DatabaseError, IntegrityError
+
 from app.articles.model import Article
 from app.dao.base import BaseDAO
 from app.database import async_session_maker
-from sqlalchemy import select
-
 from app.exceptions import *
-from app.users.dependencies import get_current_user
 from app.users.model import User
 
 UPLOAD_DIR = Path("app/images")

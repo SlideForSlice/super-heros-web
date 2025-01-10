@@ -1,10 +1,9 @@
-from sqlalchemy.exc import IntegrityError, DatabaseError
+from sqlalchemy import delete, select
+from sqlalchemy.exc import DatabaseError, IntegrityError
 
 from app.chat_messages.model import ChatMessage
 from app.dao.base import BaseDAO
 from app.database import async_session_maker
-from sqlalchemy import select, delete
-
 from app.exceptions import MessagesNotFound
 
 

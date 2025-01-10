@@ -2,12 +2,11 @@
 from datetime import datetime, timezone
 
 from fastapi import Depends, Request
-from jose import JWTError, jwt, ExpiredSignatureError
+from jose import ExpiredSignatureError, JWTError, jwt
 
 from app.config import settings
 from app.exceptions import *
 from app.users.dao import UserDAO
-
 
 
 def get_token(request:Request) -> str:

@@ -1,8 +1,8 @@
-from typing import List, Dict
+from typing import Dict, List
 
 from fastapi import APIRouter
 from fastapi.params import Depends
-
+from fastapi_versioning import version
 from app.chat_messages.dao import ChatMessageDAO
 from app.chat_messages.schema import SChatMessage
 from app.exceptions import *
@@ -15,6 +15,7 @@ router = APIRouter(
 )
 
 @router.get("/all/{chat_id}")
+@version(1)
 async def get_all_messages_by_chat_id(chat_id: int) -> List[SChatMessage]:
     result = await ChatMessageDAO.find_all_with_filter(chat_id=chat_id)
 
@@ -22,6 +23,7 @@ async def get_all_messages_by_chat_id(chat_id: int) -> List[SChatMessage]:
         raise MessagesNotFound
     return result
 @router.post("/{chat_id}")
+@version(1)
 async def create_chat_message(
         chat_id: int,
         message: str,
@@ -33,6 +35,7 @@ async def create_chat_message(
     return result
 
 @router.patch("/{chat_message_id}")
+@version(1)
 async def update_chat_message(chat_message_id: int, message: str) -> SChatMessage:
     result = await ChatMessageDAO.update_message(message_id=chat_message_id, text=message)
     if not result:
@@ -40,6 +43,7 @@ async def update_chat_message(chat_message_id: int, message: str) -> SChatMessag
     return result
 
 @router.delete("/{chat_message_id}")
+@version(1)
 async def delete_chat_message(message_id: int) -> Dict[str, str]:
     result = await ChatMessageDAO.delete_message(message_id)
     if not result:

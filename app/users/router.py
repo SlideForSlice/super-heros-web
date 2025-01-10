@@ -1,9 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends, Response
+from fastapi_versioning import version
 
 from app.exceptions import *
-from app.users.auth import get_password_hash, authenticate_user, create_access_token
+from app.users.auth import authenticate_user, create_access_token, get_password_hash
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.model import User
@@ -15,7 +16,8 @@ router = APIRouter(
     tags=["auth & user"],
 )
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register")
+@version(1)
 async def register(user_data: SUser):
     """Регистрация нового пользователя."""
     existing_user = await UserDAO.find_one_or_none(email=user_data.email)
@@ -28,6 +30,7 @@ async def register(user_data: SUser):
     return {"message": "User registered successfully"}
 
 @router.post("/login")
+@version(1)
 async def login_user(response: Response, user_data: SUser):
     """Аутентификация пользователя и выдача токена."""
     user = await authenticate_user(user_data.email, user_data.password)
@@ -40,6 +43,7 @@ async def login_user(response: Response, user_data: SUser):
     return {"access_token": access_token}
 
 @router.post("/logout")
+@version(1)
 async def logout_user(response: Response):
     """Выход пользователя и удаление токена."""
     response.delete_cookie("booking_access_token")
@@ -47,6 +51,7 @@ async def logout_user(response: Response):
     return {"message": "Logged out successfully"}
 
 @router.get("/me")
+@version(1)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     """Получение информации о текущем пользователе."""
     if current_user:
