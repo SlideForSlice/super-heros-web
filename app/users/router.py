@@ -17,7 +17,6 @@ router = APIRouter(
 )
 
 @router.post("/register")
-@version(1)
 async def register(user_data: SUser):
     """Регистрация нового пользователя."""
     existing_user = await UserDAO.find_one_or_none(email=user_data.email)
@@ -30,7 +29,6 @@ async def register(user_data: SUser):
     return {"message": "User registered successfully"}
 
 @router.post("/login")
-@version(1)
 async def login_user(response: Response, user_data: SUser):
     """Аутентификация пользователя и выдача токена."""
     user = await authenticate_user(user_data.email, user_data.password)
@@ -43,7 +41,6 @@ async def login_user(response: Response, user_data: SUser):
     return {"access_token": access_token}
 
 @router.post("/logout")
-@version(1)
 async def logout_user(response: Response):
     """Выход пользователя и удаление токена."""
     response.delete_cookie("booking_access_token")
@@ -51,7 +48,6 @@ async def logout_user(response: Response):
     return {"message": "Logged out successfully"}
 
 @router.get("/me")
-@version(1)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     """Получение информации о текущем пользователе."""
     if current_user:
