@@ -8,6 +8,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import DatabaseError, IntegrityError
 
 from app.articles.model import Article
+from app.articles.schema import SArticles
+from app.back_tasks.tasks import process_pic, send_notification
 from app.dao.base import BaseDAO
 from app.database import async_session_maker
 from app.exceptions import *
@@ -35,6 +37,8 @@ class ArticleDAO(BaseDAO):
                 result = await session.execute(query)
                 article_exists = result.scalar_one_or_none()
 
+
+
                 if not article_exists:
 
                     created_at = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -47,9 +51,23 @@ class ArticleDAO(BaseDAO):
                         author_id=author_id,
                         created_at=created_at
                     )
+
                     session.add(new_article)
                     await session.commit()
                     await session.refresh(new_article)
+
+                    query = select(User).where(User.id == author_id)
+                    result = await session.execute(query)
+                    user = result.scalar_one_or_none()
+
+                    if not user:
+                        # Если вдруг такого пользователя нет, бросаем ошибку или обрабатываем как-то иначе
+                        raise DatabaseError(f"User with id={author_id} not found")
+
+                    pydantic_article = SArticles.model_validate(new_article)
+                    article_dict = pydantic_article.model_dump()
+                    send_notification.delay(article_dict, user.email)
+
                     return new_article
 
                 else:
@@ -76,8 +94,11 @@ class ArticleDAO(BaseDAO):
         try:
             with file_path.open('wb') as f:
                 shutil.copyfileobj(file.file, f)
+
+            process_pic.delay(str(file_path))
+
         except Exception as e:
-            raise UploadFileError
+            raise e
 
         async with async_session_maker() as session:
             try:

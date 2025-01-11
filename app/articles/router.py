@@ -3,10 +3,12 @@ from typing import Dict, List
 
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi_versioning import version
+from pydantic.v1 import parse_obj_as
 
 from app.articles.dao import ArticleDAO
 
 from app.articles.schema import SArticles
+from app.back_tasks.tasks import send_notification
 from app.exceptions import *
 from app.users.dependencies import get_current_user
 from app.users.model import User
@@ -60,6 +62,7 @@ async def create_article(
         current_user: User = Depends(get_current_user)
 ) -> SArticles:
     return await ArticleDAO.add(name_of_hero, description, powers, solo, current_user.id)
+
 
 @router.patch("/edit_article/{article_id}")
 async def edit_article_desc_by_id(article_id: int, new_description: str) -> SArticles:

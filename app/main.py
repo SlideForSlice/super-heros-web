@@ -6,6 +6,7 @@ from uvicorn import lifespan
 
 from app.articles.router import router as articles_router
 from app.chat_messages.router import router as chat_messages_router
+from app.config import settings
 from app.support.router import router as support_router
 from app.users.router import router as users_router
 from fastapi_versioning import VersionedFastAPI
@@ -23,7 +24,7 @@ from redis import asyncio as aioredis
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    redis = aioredis.from_url("redis://localhost:6379",encoding="utf8" , decode_responses=False)
+    redis = aioredis.from_url(settings.REDIS_URL,encoding="utf8" , decode_responses=False)
     FastAPICache.init(
         RedisBackend(redis),
         prefix="cache")
