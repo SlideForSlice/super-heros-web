@@ -17,3 +17,6 @@ class ChatMessage(Base):
 
     user: Mapped['User'] = relationship('User', back_populates='chat_messages')
     chat: Mapped['Support'] = relationship('Support', back_populates='messages')
+
+    def __str__(self):
+        return f"Message id: {self.message_id}"

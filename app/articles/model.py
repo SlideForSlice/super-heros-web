@@ -20,3 +20,6 @@ class Article(Base):
     created_at: Mapped[date] = mapped_column(Date, nullable=False)
 
     author: Mapped['User'] = relationship('User', back_populates='articles')
+
+    def __str__(self):
+        return f"Article name: {self.name_of_hero}"

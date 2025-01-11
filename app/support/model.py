@@ -17,3 +17,6 @@ class Support(Base):
 
     user: Mapped['User'] = relationship('User', back_populates='support')
     messages: Mapped[list['ChatMessage']] = relationship('ChatMessage', back_populates='chat')
+
+    def __str__(self):
+        return f"Chat name: {self.chat_name}"
