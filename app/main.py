@@ -2,6 +2,7 @@ from idlelib.iomenu import encoding
 
 from fastapi import FastAPI
 from sqlalchemy.event import listens_for
+from sqlalchemy.orm import Session
 from uvicorn import lifespan
 from sqladmin import Admin
 
@@ -25,6 +26,30 @@ from contextlib import asynccontextmanager
 from redis import asyncio as aioredis
 
 
+def create_app() -> FastAPI:
+    """
+    Создание и настройка FastAPI приложения.
+    """
+    # Инициализация FastAPI приложения
+    app = FastAPI(lifespan=lifespan)
+
+    # Подключение маршрутов
+    app.include_router(users_router, prefix="/v1")
+    app.include_router(articles_router, prefix="/v1")
+    app.include_router(support_router, prefix="/v1")
+    app.include_router(chat_messages_router, prefix="/v1")
+
+    # Настройка панели администратора
+    admin = Admin(app, engine)
+    admin.add_view(UserAdmin)
+    admin.add_view(ArticleAdmin)
+    admin.add_view(SupportAdmin)
+    admin.add_view(MessagesAdmin)
+
+    return app
+
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,19 +61,9 @@ async def lifespan(app: FastAPI):
     await redis.close()
 
 
-app = FastAPI(lifespan=lifespan)
 
-app.include_router(users_router, prefix="/v1")
-app.include_router(articles_router, prefix="/v1")
-app.include_router(support_router, prefix="/v1")
-app.include_router(chat_messages_router, prefix="/v1")
+app = create_app()
 
-admin = Admin(app, engine)
-
-admin.add_view(UserAdmin)
-admin.add_view(ArticleAdmin)
-admin.add_view(SupportAdmin)
-admin.add_view(MessagesAdmin)
 
 # app = VersionedFastAPI(base_app,
 #     version_format='{major}',

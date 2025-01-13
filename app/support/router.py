@@ -17,9 +17,8 @@ router = APIRouter(
 )
 
 @router.get("/all_chats")
-@cache(expire=10, namespace="support")
+@cache(expire=60, namespace="support")
 async def get_all_chats(current_user: User = Depends(get_current_user)) -> List[SSupport]:
-    await asyncio.sleep(3)
     return await SupportDAO.find_all_with_filter(user_id=current_user.id)
 
 @router.get("/{chat_id}")

@@ -1,0 +1,82 @@
+[
+  {
+    "name_of_hero": "Spider-Man",
+    "description": "A teenage superhero with spider-like abilities",
+    "powers": "Spider-sense, super strength, wall-crawling",
+    "solo": false,
+    "author_id": 1,
+    "created_at": "2025-01-01"
+  },
+  {
+    "name_of_hero": "Captain Marvel",
+    "description": "A powerful cosmic hero with energy absorption",
+    "powers": "Super strength, flight, energy projection",
+    "solo": true,
+    "author_id": 1,
+    "created_at": "2025-02-10"
+  },
+  {
+    "name_of_hero": "Black Widow",
+    "description": "An elite spy with remarkable agility and combat skills",
+    "powers": "Expert marksmanship, hand-to-hand combat, espionage",
+    "solo": true,
+    "author_id": 1,
+    "created_at": "2025-03-15"
+  },
+  {
+    "name_of_hero": "Hawkeye",
+    "description": "A master archer with perfect aim",
+    "powers": "Archery, combat strategy, gadgetry",
+    "solo": false,
+    "author_id": 1,
+    "created_at": "2025-01-20"
+  },
+  {
+    "name_of_hero": "Doctor Strange",
+    "description": "A sorcerer supreme wielding mystical arts",
+    "powers": "Spellcasting, interdimensional travel, time manipulation",
+    "solo": false,
+    "author_id": 1,
+    "created_at": "2025-04-01"
+  },
+  {
+    "name_of_hero": "Scarlet Witch",
+    "description": "A powerful mutant capable of manipulating reality",
+    "powers": "Chaos magic, telekinesis, energy manipulation",
+    "solo": false,
+    "author_id": 2,
+    "created_at": "2025-04-15"
+  },
+  {
+    "name_of_hero": "Wolverine",
+    "description": "A fierce mutant with retractable claws and healing factor",
+    "powers": "Regeneration, adamantium claws, enhanced senses",
+    "solo": true,
+    "author_id": 2,
+    "created_at": "2025-05-10"
+  },
+  {
+    "name_of_hero": "Storm",
+    "description": "A mutant with the ability to control the weather",
+    "powers": "Weather manipulation, flight, lightning generation",
+    "solo": true,
+    "author_id": 2,
+    "created_at": "2025-06-01"
+  },
+  {
+    "name_of_hero": "Black Panther",
+    "description": "King of Wakanda with enhanced abilities from the Heart-Shaped Herb",
+    "powers": "Enhanced strength, speed, agility, vibranium suit",
+    "solo": false,
+    "author_id": 2,
+    "created_at": "2025-06-15"
+  },
+  {
+    "name_of_hero": "Iron Man",
+    "description": "Genius billionaire in a high-tech powered suit",
+    "powers": "Powered armor, flight, advanced AI and weaponry",
+    "solo": true,
+    "author_id": 1,
+    "created_at": "2025-07-01"
+  }
+]

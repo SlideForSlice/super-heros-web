@@ -36,14 +36,14 @@ async def login_user(response: Response, user_data: SUser):
         logger.warning(f"Failed login attempt for email {user_data.email}")
         raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(user.id)})
-    response.set_cookie("booking_access_token", access_token, httponly=True)
+    response.set_cookie("user_access_token", access_token, httponly=True)
     logger.info(f"User with email {user_data.email} logged in successfully")
     return {"access_token": access_token}
 
 @router.post("/logout")
 async def logout_user(response: Response):
     """Выход пользователя и удаление токена."""
-    response.delete_cookie("booking_access_token")
+    response.delete_cookie("user_access_token")
     logger.info("User logged out successfully")
     return {"message": "Logged out successfully"}
 

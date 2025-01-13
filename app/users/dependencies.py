@@ -11,7 +11,7 @@ from app.users.dao import UserDAO
 
 def get_token(request:Request) -> str:
     """Извлекает JWT-токен из куки."""
-    token = request.cookies.get('booking_access_token')
+    token = request.cookies.get('user_access_token')
     if not token:
         raise TokenAbsentException
     return token

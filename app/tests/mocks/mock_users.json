@@ -1,0 +1,10 @@
+[
+  {
+    "email": "oleg@example.com",
+    "hashed_pass": "$2b$12$22QWSmHq09qI.Ki85YfWjOesx8PPlZ3G5/PtYCOHwMK.nEN245hEW"
+  },
+  {
+    "email": "cringeBabai@example.com",
+    "hashed_pass": "$2b$12$22QWSmHq09qI.Ki85YfWjOesx8PPlZ3G5/PtYCOHwMK.nEN245hEW"
+  }
+]

@@ -6,6 +6,7 @@ from passlib.context import CryptContext
 from pydantic import EmailStr
 
 from app.config import settings
+from app.exceptions import IncorrectEmailOrPasswordException
 from app.users.dao import UserDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -30,6 +31,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
 
 async def authenticate_user(email: EmailStr, password: str):
     user = await UserDAO.find_one_or_none(email=email)
-    if not user and not verify_password(password, user.password):
-        raise HTTPException(status_code=401)
+    if not user or not verify_password(password, user.hashed_pass):
+        raise IncorrectEmailOrPasswordException
     return user

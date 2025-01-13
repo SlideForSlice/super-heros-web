@@ -16,7 +16,6 @@ from app.exceptions import *
 from app.users.model import User
 
 UPLOAD_DIR = Path("app/images")
-UPLOAD_DIR.mkdir(exist_ok=True)
 BASE_URL = "http://localhost:8000"
 
 class ArticleDAO(BaseDAO):
