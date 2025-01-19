@@ -31,7 +31,6 @@ async def get_all_articles() -> List[SArticles]:
 
 @router.get("/{hero_name}")
 @cache(expire=60, namespace="articles")
-
 async def get_article_by_name(hero_name: str) -> SArticles:
     result = await ArticleDAO.find_one_or_none(name_of_hero=hero_name)
 
@@ -53,7 +52,7 @@ async def share_article_by_id(article_id: int) -> str:
 async def get_author_by_id(article_id: int) -> SAuthor:
     return await ArticleDAO.get_author(article_id=article_id)
 
-@router.post("/")
+@router.post("/create")
 async def create_article(
         name_of_hero: str,
         description: str,

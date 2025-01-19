@@ -31,53 +31,45 @@ class ArticleDAO(BaseDAO):
             author_id: int
     ):
         async with async_session_maker() as session:
-            try:
-                query = select(Article).where(Article.name_of_hero == name_of_hero)
+            query = select(Article).where(Article.name_of_hero == name_of_hero)
+            result = await session.execute(query)
+            article_exists = result.scalar_one_or_none()
+
+
+
+            if not article_exists:
+
+                created_at = datetime.now(timezone.utc).replace(tzinfo=None)
+
+                new_article = Article(
+                    name_of_hero=name_of_hero,
+                    description=description,
+                    powers=powers,
+                    solo=solo,
+                    author_id=author_id,
+                    created_at=created_at
+                )
+
+                session.add(new_article)
+                await session.commit()
+                await session.refresh(new_article)
+
+                query = select(User).where(User.id == author_id)
                 result = await session.execute(query)
-                article_exists = result.scalar_one_or_none()
+                user = result.scalar_one_or_none()
 
+                if not user:
+                    # Если вдруг такого пользователя нет, бросаем ошибку или обрабатываем как-то иначе
+                    raise DatabaseError(f"User with id={author_id} not found")
 
+                pydantic_article = SArticles.model_validate(new_article)
+                article_dict = pydantic_article.model_dump()
+                send_notification.delay(article_dict, user.email)
 
-                if not article_exists:
+                return new_article
 
-                    created_at = datetime.now(timezone.utc).replace(tzinfo=None)
-
-                    new_article = Article(
-                        name_of_hero=name_of_hero,
-                        description=description,
-                        powers=powers,
-                        solo=solo,
-                        author_id=author_id,
-                        created_at=created_at
-                    )
-
-                    session.add(new_article)
-                    await session.commit()
-                    await session.refresh(new_article)
-
-                    query = select(User).where(User.id == author_id)
-                    result = await session.execute(query)
-                    user = result.scalar_one_or_none()
-
-                    if not user:
-                        # Если вдруг такого пользователя нет, бросаем ошибку или обрабатываем как-то иначе
-                        raise DatabaseError(f"User with id={author_id} not found")
-
-                    pydantic_article = SArticles.model_validate(new_article)
-                    article_dict = pydantic_article.model_dump()
-                    send_notification.delay(article_dict, user.email)
-
-                    return new_article
-
-                else:
-                    raise ArticleIsAlreadyExistsException
-            except IntegrityError as e:
-                await session.rollback()
-                raise DatabaseError(f"Database integrity error: {e}")
-
-            except Exception as e:
-                await session.rollback()
-                raise DatabaseError(f"An error occurred while adding the article: {e}")
+            else:
+                raise ArticleIsAlreadyExistsException
 
     @classmethod
     async def upload_file(
@@ -147,19 +139,17 @@ class ArticleDAO(BaseDAO):
     ):
 
         async with async_session_maker() as session:
-            try:
-                query = (
-                    select(User.id, User.email)
-                    .join(Article, User.id == Article.author_id)
-                    .where(Article.id == article_id)
-                )
-                result = await session.execute(query)
-                author  = result.first()
+            query = (
+                select(User.id, User.email)
+                .join(Article, User.id == Article.author_id)
+                .where(Article.id == article_id)
+            )
+            result = await session.execute(query)
+            author  = result.first()
 
-                if not author:
-                    raise UserDontFound
+            if not author:
+                raise UserDontFound
 
-                return {"id": author.id, "email": author.email}
+            return {"id": author.id, "email": author.email}
 
-            except Exception as e:
-                raise DatabaseError(f"An error occurred while retrieving the author: {e}")
+

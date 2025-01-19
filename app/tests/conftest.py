@@ -21,7 +21,7 @@ import aiofiles
 from fastapi.testclient import TestClient
 from app.main import create_app
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
     assert settings.MODE == "TEST"
 
@@ -67,7 +67,7 @@ def ac():
     with TestClient(app) as ac:
         yield ac
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 async def session():
     async with async_session_maker() as session:
         yield session
